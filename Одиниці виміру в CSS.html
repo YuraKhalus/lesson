@@ -1,0 +1,786 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Одиниці виміру в CSS</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one slide per screen on the brand's dark grid, live CSS playgrounds = editor | browser preview */
+:root {
+  --bg: #0d0d0f;
+  --grid: rgba(255,255,255,.035);
+  --surface: #16161a;
+  --surface-2: #1f1f25;
+  --line: #2b2b33;
+  --fg: #f4f3f0;
+  --muted: #a5a3ad;
+  --orange: #ff8a1e;
+  --blue: #2f6fd6;
+  --yellow: #ffd23a;
+  --display: "Montserrat", "Segoe UI", Arial, sans-serif;
+  --body: "Golos Text", "Segoe UI", Roboto, Arial, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body {
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 32px 32px;
+  color: var(--fg);
+  font: 400 1.05rem/1.55 var(--body);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.deck {
+  flex: 1;
+  overflow: auto;
+  padding-block: 28px 24px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.slide {
+  max-width: 1240px;
+  min-height: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 22px;
+}
+.slide > * { min-width: 0; }
+.eyebrow {
+  font: 600 .8rem/1 var(--mono);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--orange);
+}
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; }
+h1 { font-weight: 800; font-size: clamp(2.4rem, 6.4vw, 5rem); line-height: 1.02; letter-spacing: -.02em; }
+h2 { font-weight: 800; font-size: clamp(1.6rem, 3.4vw, 2.6rem); line-height: 1.1; letter-spacing: -.01em; }
+h3 { font-weight: 700; font-size: 1.2rem; }
+p { margin: 0; max-width: 68ch; }
+.lead { font-size: clamp(1.05rem, 1.6vw, 1.3rem); color: var(--muted); }
+code { font-family: var(--mono); font-size: .9em; background: var(--surface-2); color: var(--yellow); padding: .08em .38em; border-radius: 4px; }
+.hint { font-size: .95rem; color: var(--muted); }
+.hint b { color: var(--fg); font-weight: 600; }
+ul.clean { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+ul.clean li { padding-left: 1.4em; position: relative; }
+ul.clean li::before { content: "/"; position: absolute; left: 0; color: var(--orange); font-weight: 800; font-family: var(--display); }
+
+/* logo */
+.logo { display: inline-flex; flex-direction: column; font-family: var(--display); line-height: 1; }
+.logo .word { font-weight: 800; font-size: 2.6rem; letter-spacing: -.01em; display: flex; align-items: center; }
+.logo .slash { color: var(--orange); margin-right: .2em; transform: skewX(-6deg); }
+.logo .o {
+  width: .66em; height: .66em; border-radius: 50%;
+  background: linear-gradient(var(--blue) 50%, var(--yellow) 50%);
+  margin: .1em .04em 0 .1em;
+}
+.logo small { font: 500 1.3rem/1 var(--display); margin: .3em 0 0 1.05em; }
+.logo.sm .word { font-size: 1.15rem; }
+.logo.sm small { font-size: .62rem; }
+
+/* title slide */
+.chips { display: flex; flex-wrap: wrap; gap: 10px; }
+.chip {
+  font: 600 1.05rem/1 var(--mono);
+  padding: .55em .9em;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+}
+.chip:nth-child(1) { color: var(--fg); }
+.chip:nth-child(2) { color: var(--orange); }
+.chip:nth-child(3), .chip:nth-child(4) { color: var(--yellow); }
+.chip:nth-child(5), .chip:nth-child(6) { color: #7fa9ec; }
+.agenda {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 12px; overflow: hidden;
+}
+.agenda div { background: var(--surface); padding: 14px 16px; display: grid; gap: 4px; }
+.agenda .t { font: 600 .78rem/1 var(--mono); color: var(--orange); font-variant-numeric: tabular-nums; }
+
+/* two-column text layouts */
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px 22px; display: grid; gap: 12px; align-content: start; }
+.panel.good h3 { color: #7ad99a; }
+.panel.bad h3 { color: #ff7a6b; }
+
+/* nested "relative to what" diagram */
+.rel { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 28px; align-items: center; }
+.nest { border: 2px dashed; border-radius: 12px; padding: 34px 16px 16px; position: relative; }
+.nest .tag {
+  position: absolute; top: 8px; left: 12px;
+  font: 600 .82rem/1.2 var(--mono);
+}
+.n-vp { border-color: var(--yellow); }  .n-vp > .tag { color: var(--yellow); }
+.n-html { border-color: #7fa9ec; }      .n-html > .tag { color: #7fa9ec; }
+.n-parent { border-color: var(--orange); } .n-parent > .tag { color: var(--orange); }
+.n-el { border: 2px solid var(--fg); background: var(--surface-2); padding: 34px 16px 18px; }
+.n-el > .tag { color: var(--fg); }
+.n-el b { font: 700 1.1rem/1 var(--mono); }
+
+/* device pixel illustration */
+.dpr { display: flex; gap: 22px; flex-wrap: wrap; align-items: end; }
+.dpr figure { margin: 0; display: grid; gap: 8px; justify-items: center; font: .8rem/1.2 var(--mono); color: var(--muted); }
+.px-grid { display: grid; gap: 2px; }
+.px-grid i { width: 14px; height: 14px; background: var(--orange); border-radius: 2px; }
+
+/* cheat sheet */
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; }
+table { border-collapse: collapse; width: 100%; min-width: 560px; background: var(--surface); }
+th, td { text-align: left; padding: 14px 18px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 600 .78rem/1 var(--mono); text-transform: uppercase; letter-spacing: .1em; color: var(--muted); background: var(--surface-2); }
+tr:last-child td { border-bottom: 0; }
+td:nth-child(2) code { font-size: 1em; }
+
+/* playground */
+.pg { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 16px; align-items: start; }
+.pg-editor, .pg-preview { min-width: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; }
+.pg-bar { display: flex; align-items: center; gap: 6px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface-2); flex-wrap: wrap; min-height: 46px; }
+.pg-bar .spacer { flex: 1; }
+.btn-s {
+  font: 600 .78rem/1 var(--mono); color: var(--muted);
+  background: transparent; border: 1px solid transparent; border-radius: 7px;
+  padding: 7px 10px; cursor: pointer;
+}
+.btn-s:hover { color: var(--fg); border-color: var(--line); }
+.btn-s.on { color: var(--bg); background: var(--orange); }
+.btn-s.sol { color: var(--yellow); border-color: var(--line); }
+.btn-s:focus-visible, button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 2px solid var(--yellow); outline-offset: 2px; }
+.pg textarea {
+  display: block; width: 100%; min-height: 300px; resize: vertical;
+  background: var(--surface); color: var(--fg);
+  border: 0; padding: 14px 16px; margin: 0;
+  font: 400 .92rem/1.6 var(--mono); tab-size: 2; white-space: pre; overflow: auto;
+}
+.pg textarea:focus { outline: none; box-shadow: inset 0 0 0 2px var(--orange); }
+.ctl { display: grid; grid-template-columns: auto minmax(0, 1fr) 4.5em; gap: 12px; align-items: center; padding: 12px 16px; border-top: 1px solid var(--line); font-size: .9rem; }
+.ctl span { color: var(--muted); }
+.ctl input { accent-color: var(--orange); width: 100%; }
+.ctl output { font: 600 .9rem/1 var(--mono); color: var(--yellow); text-align: right; font-variant-numeric: tabular-nums; }
+.dots { display: flex; gap: 6px; margin-right: 6px; }
+.dots i { width: 10px; height: 10px; border-radius: 50%; background: var(--line); }
+.dots i:first-child { background: #ff5f57; } .dots i:nth-child(2) { background: #febc2e; } .dots i:nth-child(3) { background: #28c840; }
+.vp { font: 600 .78rem/1 var(--mono); color: var(--yellow); font-variant-numeric: tabular-nums; }
+.lbl { display: flex; align-items: center; gap: 6px; font: .78rem/1 var(--mono); color: var(--muted); cursor: pointer; padding: 0 4px; }
+.lbl input { accent-color: var(--orange); margin: 0; }
+.stage { padding: 14px; background: repeating-linear-gradient(45deg, var(--surface) 0 8px, var(--surface-2) 8px 9px); overflow: hidden; }
+.frame-wrap {
+  width: 100%; max-width: 100%; min-width: 220px;
+  resize: horizontal; overflow: hidden;
+  border-radius: 6px; background: #fff;
+  box-shadow: 0 0 0 1px var(--line);
+}
+.frame-wrap iframe { display: block; width: 100%; height: 100%; border: 0; background: #fff; }
+.pg-foot { padding: 10px 14px; border-top: 1px solid var(--line); }
+
+/* nav */
+.nav {
+  display: flex; align-items: center; gap: 14px;
+  padding-block: 10px calc(10px + env(safe-area-inset-bottom, 0px));
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  border-top: 1px solid var(--line);
+  background: rgba(13,13,15,.92);
+  position: relative;
+}
+.progress { position: absolute; top: -1px; left: 0; height: 2px; background: var(--orange); transition: width .25s; }
+.nav .ttl { flex: 1; min-width: 0; font-size: .9rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.nav .count { font: 600 .9rem/1 var(--mono); font-variant-numeric: tabular-nums; }
+.nb {
+  width: 42px; height: 38px; border-radius: 9px; border: 1px solid var(--line);
+  background: var(--surface); color: var(--fg); font: 700 1.1rem/1 var(--display); cursor: pointer;
+}
+.nb:hover:not(:disabled) { border-color: var(--orange); color: var(--orange); }
+.nb:disabled { opacity: .35; cursor: default; }
+
+@media (max-width: 900px) {
+  .pg, .rel { grid-template-columns: minmax(0, 1fr); }
+  .logo.sm { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .progress { transition: none; } }
+</style>
+
+<main class="deck" id="deck">
+
+<!-- 1 -->
+<section class="slide" data-title="Вступ">
+  <div class="logo"><span class="word"><span class="slash">/</span>creat<span class="o"></span>r</span><small>IT Academy</small></div>
+  <div class="eyebrow">Консультація-майстерклас · 60 хвилин</div>
+  <h1>Одиниці виміру в CSS</h1>
+  <div class="chips"><span class="chip">px</span><span class="chip">%</span><span class="chip">em</span><span class="chip">rem</span><span class="chip">vh</span><span class="chip">vw</span></div>
+  <p class="lead">Кожна одиниця відповідає на одне питання: <b style="color:var(--fg)">відносно чого рахується розмір?</b> На кожному слайді з кодом його можна редагувати й одразу бачити результат.</p>
+  <div class="agenda">
+    <div><span class="t">0–10 хв</span>Проблема і схема</div>
+    <div><span class="t">10–20 хв</span>px та %</div>
+    <div><span class="t">20–35 хв</span>em та rem</div>
+    <div><span class="t">35–45 хв</span>vh, vw, clamp()</div>
+    <div><span class="t">45–60 хв</span>Практика і підсумок</div>
+  </div>
+</section>
+
+<!-- 2 -->
+<section class="slide" data-title="Проблема: усе в px" hidden>
+  <div class="eyebrow">Проблема</div>
+  <h2>Картка зверстана тільки в px. Що з нею не так?</h2>
+  <div class="pg" data-pg="problem"></div>
+  <p class="hint"><b>Спробуйте:</b> посуньте повзунок «шрифт браузера», і нічого не зміниться. Тепер замініть <code>22px</code> на <code>1.375rem</code>, а <code>14px</code> на <code>0.875rem</code> і посуньте його ще раз. Потім звузьте вікно до 375.</p>
+</section>
+
+<!-- 3 -->
+<section class="slide" data-title="Відносно чого?" hidden>
+  <div class="eyebrow">Головна схема</div>
+  <h2>Відносно чого рахується кожна одиниця</h2>
+  <div class="rel">
+    <div class="nest n-vp"><span class="tag">вікно браузера → vw, vh</span>
+      <div class="nest n-html"><span class="tag">html (корінь) → rem</span>
+        <div class="nest n-parent"><span class="tag">батько → %, em у font-size</span>
+          <div class="nest n-el"><span class="tag">сам елемент → em у padding, margin…</span><b>.element</b></div>
+        </div>
+      </div>
+    </div>
+    <ul class="clean">
+      <li><code>px</code> не залежить ні від чого на сторінці.</li>
+      <li><code>%</code> бере розмір батька: <code>width</code> від ширини, <code>height</code> від висоти.</li>
+      <li><code>em</code> у <code>font-size</code> множить шрифт батька, а в інших властивостях множить власний <code>font-size</code> елемента.</li>
+      <li><code>rem</code> завжди множить <code>font-size</code> тегу <code>html</code> (за замовчуванням 16px).</li>
+      <li><code>1vw</code> = 1% ширини вікна, <code>1vh</code> = 1% висоти.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 4 -->
+<section class="slide" data-title="px" hidden>
+  <div class="eyebrow">одиниця: px</div>
+  <h2>px — фіксований CSS-піксель</h2>
+  <p class="lead">CSS-піксель не дорівнює пікселю екрана. На Retina-дисплеї (devicePixelRatio = 2) один CSS-піксель малюється квадратом 2×2 фізичних пікселі.</p>
+  <div class="dpr">
+    <figure><div class="px-grid" style="grid-template-columns:repeat(1,14px)"><i></i></div>DPR 1</figure>
+    <figure><div class="px-grid" style="grid-template-columns:repeat(2,14px)"><i></i><i></i><i></i><i></i></div>DPR 2</figure>
+    <figure><div class="px-grid" style="grid-template-columns:repeat(3,14px)"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>DPR 3</figure>
+    <p class="hint" style="align-self:center">1 CSS px на різних екранах.<br>Перевірте свій: <code id="dprOut">window.devicePixelRatio</code></p>
+  </div>
+  <div class="cols">
+    <div class="panel good"><h3>Добре для</h3><ul class="clean">
+      <li><code>border: 1px</code>, тонкі лінії</li>
+      <li><code>box-shadow</code>, <code>outline</code></li>
+      <li>Дрібні деталі, які не мають рости разом із текстом</li>
+    </ul></div>
+    <div class="panel bad"><h3>Погано для</h3><ul class="clean">
+      <li><code>font-size</code>: ігнорує налаштування шрифту в браузері</li>
+      <li>Ширини контейнерів: на телефоні з’являється горизонтальний скрол</li>
+      <li>Відступи, які мають масштабуватись разом із текстом</li>
+    </ul></div>
+  </div>
+</section>
+
+<!-- 5 -->
+<section class="slide" data-title="%" hidden>
+  <div class="eyebrow">одиниця: %</div>
+  <h2>% — частка від розміру батька</h2>
+  <div class="pg" data-pg="percent"></div>
+  <p class="hint"><b>Спробуйте:</b> змініть <code>width</code> у <code>.parent</code> на <code>600px</code>. Потім видаліть рядок <code>height: 200px</code>: що станеться з <code>height: 50%</code>? <b>Пастка:</b> <code>padding</code> і <code>margin</code> у % рахуються від <b>ширини</b> батька, навіть зверху і знизу.</p>
+</section>
+
+<!-- 6 -->
+<section class="slide" data-title="em" hidden>
+  <div class="eyebrow">одиниця: em</div>
+  <h2>em множиться при вкладеності</h2>
+  <div class="pg" data-pg="em"></div>
+  <p class="hint"><b>Подивіться на мітки:</b> 20 → 25 → 31.3 → 39.1px. Кожен рівень множить шрифт батька на 1.25. Змініть <code>1.25em</code> на <code>0.8em</code> і подивіться, як текст зменшується з кожним рівнем.</p>
+</section>
+
+<!-- 7 -->
+<section class="slide" data-title="rem" hidden>
+  <div class="eyebrow">одиниця: rem</div>
+  <h2>rem завжди рахується від html</h2>
+  <div class="pg" data-pg="rem"></div>
+  <p class="hint"><b>Порівняйте з em:</b> усі рівні мають однаковий шрифт. Посуньте повзунок, і змасштабується вся сторінка разом. Так браузер поводиться, коли користувач збільшує шрифт у налаштуваннях.</p>
+</section>
+
+<!-- 8 -->
+<section class="slide" data-title="em + rem у компоненті" hidden>
+  <div class="eyebrow">em + rem разом</div>
+  <h2>Кнопка: шрифт у rem, відступи в em</h2>
+  <div class="pg" data-pg="btn"></div>
+  <p class="hint"><b>Ідея:</b> модифікатор змінює лише <code>font-size</code>, а <code>padding</code> і <code>border-radius</code> у em підлаштовуються самі. Додайте свій <code>.btn--xl { font-size: 2rem; }</code> і клас у HTML.</p>
+</section>
+
+<!-- 9 -->
+<section class="slide" data-title="vh / vw" hidden>
+  <div class="eyebrow">одиниці: vh, vw</div>
+  <h2>vh і vw рахуються від вікна</h2>
+  <div class="pg" data-pg="vw"></div>
+  <p class="hint"><b>Спробуйте:</b> тягніть правий нижній кут вікна попереднього перегляду або натискайте 375 / 768 / 100%. Висоту теж можна змінити. У Chrome DevTools те саме робить режим пристрою (Ctrl+Shift+M).</p>
+</section>
+
+<!-- 10 -->
+<section class="slide" data-title="Пастки vh/vw і clamp()" hidden>
+  <div class="eyebrow">Пастки</div>
+  <h2>Три пастки vh/vw і як їх обійти</h2>
+  <div class="cols">
+    <div class="panel"><h3><code>100vw</code> + скролбар</h3><p>100vw включає ширину вертикального скролбару, тому з’являється горизонтальний скрол. Для повної ширини краще <code>width: 100%</code>.</p></div>
+    <div class="panel"><h3><code>100vh</code> на телефоні</h3><p>Панель адреси браузера перекриває низ екрана. Використовуйте <code>100dvh</code> (динамічна висота), а також <code>svh</code> і <code>lvh</code>.</p></div>
+    <div class="panel"><h3>Шрифт у <code>vw</code></h3><p>На телефоні він замалий, на моніторі завеликий. Обмежте його: <code>clamp(мін, гнучко, макс)</code>.</p></div>
+  </div>
+  <div class="pg" data-pg="traps"></div>
+  <p class="hint"><b>Спробуйте:</b> перемкніть розмір вікна на 375 і 100%. Розмір заголовка не виходить за межі 24–48px. Замініть <code>100vw</code> на <code>100%</code>, щоб прибрати горизонтальний скрол.</p>
+</section>
+
+<!-- 11 -->
+<section class="slide" data-title="Шпаргалка" hidden>
+  <div class="eyebrow">Підсумок</div>
+  <h2>Що коли використовувати</h2>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Задача</th><th>Одиниця</th><th>Чому</th></tr></thead>
+    <tbody>
+      <tr><td>Шрифти, загальні відступи</td><td><code>rem</code></td><td>Передбачувано і поважає налаштування шрифту користувача</td></tr>
+      <tr><td>Відступи всередині компонента</td><td><code>em</code></td><td>Ростуть разом зі шрифтом компонента</td></tr>
+      <tr><td>Ширина відносно батька</td><td><code>%</code></td><td>Гумові колонки й контейнери</td></tr>
+      <tr><td>Обмеження ширини</td><td><code>max-width</code> у <code>rem</code></td><td>Текст не розтягується на весь монітор</td></tr>
+      <tr><td>Висота на весь екран</td><td><code>dvh</code> / <code>vh</code></td><td>dvh враховує панелі мобільного браузера</td></tr>
+      <tr><td>Адаптивний заголовок</td><td><code>clamp(rem, vw, rem)</code></td><td>Плавно, але в межах мінімуму й максимуму</td></tr>
+      <tr><td>Рамки, тіні, лінії</td><td><code>px</code></td><td>Мають бути чіткими й не масштабуватись</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- 12 -->
+<section class="slide" data-title="Практика" hidden>
+  <div class="eyebrow">Практика · 10 хвилин</div>
+  <h2>Перепишіть hero і картку на відносні одиниці</h2>
+  <div class="pg" data-pg="practice"></div>
+  <p class="hint"><b>Перевірка:</b> перемикайте 375 / 768 / 100%. Нічого не має вилазити за межі вікна, а заголовок має залишатися читабельним. Кнопка «Рішення» показує один із варіантів.</p>
+</section>
+
+<!-- 13 -->
+<section class="slide" data-title="Домашнє завдання" hidden>
+  <div class="eyebrow">Домашнє завдання</div>
+  <h2>Візьміть свою стару сторінку і приберіть з неї px</h2>
+  <ul class="clean" style="font-size:1.15rem">
+    <li>Шрифти та відступи переведіть у <code>rem</code>, а внутрішні відступи кнопок і бейджів у <code>em</code>.</li>
+    <li>Ширини контейнерів задайте в <code>%</code> і обмежте через <code>max-width</code>.</li>
+    <li>Головний заголовок зробіть через <code>clamp()</code>.</li>
+    <li>Поставте в браузері шрифт 20px і перевірте сторінку на ширині 375px.</li>
+  </ul>
+  <h1 style="margin-top:12px">Питання?</h1>
+  <div class="logo"><span class="word"><span class="slash">/</span>creat<span class="o"></span>r</span><small>IT Academy</small></div>
+</section>
+
+</main>
+
+<nav class="nav" aria-label="Слайди">
+  <div class="progress" id="progress"></div>
+  <div class="logo sm"><span class="word"><span class="slash">/</span>creat<span class="o"></span>r</span><small>IT Academy</small></div>
+  <span class="ttl" id="ttl"></span>
+  <button class="nb" id="fs" title="На весь екран (F)" aria-label="На весь екран">⤢</button>
+  <button class="nb" id="prev" aria-label="Попередній слайд">←</button>
+  <span class="count" id="count">1 / 13</span>
+  <button class="nb" id="next" aria-label="Наступний слайд">→</button>
+</nav>
+
+<script>
+const PG = {
+  problem: {
+    height: 330,
+    controls: [{ label: 'Шрифт браузера', min: 10, max: 28, value: 16, css: v => `html{font-size:${v}px}` }],
+    html:
+`<div class="card" data-m>
+  <h3 data-m>Курс Frontend</h3>
+  <p>Верстка, JavaScript, React. Старт 1 листопада.</p>
+  <button data-m>Записатись</button>
+</div>`,
+    css:
+`.card {
+  width: 320px;
+  padding: 24px;
+  border-radius: 12px;
+  background: #17171b;
+  color: #fff;
+}
+.card h3 {
+  margin: 0 0 8px;
+  font-size: 22px;
+}
+.card p {
+  font-size: 14px;
+  color: #b9b7c0;
+}
+.card button {
+  font-size: 14px;
+  padding: 10px 20px;
+  border: 0;
+  border-radius: 8px;
+  background: #ff8a1e;
+  font-weight: 700;
+}`
+  },
+  percent: {
+    height: 300,
+    html:
+`<div class="parent" data-m>
+  <div class="child" data-m>.child</div>
+</div>`,
+    css:
+`.parent {
+  width: 400px;
+  height: 200px;
+  background: #dbe7fb;
+}
+.child {
+  box-sizing: border-box;
+  width: 50%;
+  height: 50%;
+  padding: 10%;  /* від ШИРИНИ .parent */
+  background: #ff8a1e;
+}`
+  },
+  em: {
+    height: 400,
+    html:
+`<div class="box" data-m>Рівень 1
+  <div class="box" data-m>Рівень 2
+    <div class="box" data-m>Рівень 3
+      <div class="box" data-m>Рівень 4</div>
+    </div>
+  </div>
+</div>`,
+    css:
+`html { font-size: 16px; }
+
+.box {
+  font-size: 1.25em;  /* × шрифт батька */
+  padding: 0.5em;     /* × власний шрифт */
+  margin-top: 0.5em;
+  border: 2px solid #ff8a1e;
+}`
+  },
+  rem: {
+    height: 360,
+    controls: [{ label: 'font-size у html', min: 10, max: 28, value: 16, css: v => `html{font-size:${v}px}` }],
+    html:
+`<div class="box" data-m>Рівень 1
+  <div class="box" data-m>Рівень 2
+    <div class="box" data-m>Рівень 3
+      <div class="box" data-m>Рівень 4</div>
+    </div>
+  </div>
+</div>`,
+    css:
+`/* font-size для html задає повзунок */
+
+.box {
+  font-size: 1.25rem; /* × шрифт html */
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  border: 2px solid #2f6fd6;
+}`
+  },
+  btn: {
+    height: 220,
+    html:
+`<div class="row">
+  <button class="btn btn--sm" data-m>Мала</button>
+  <button class="btn" data-m>Звичайна</button>
+  <button class="btn btn--lg" data-m>Велика</button>
+</div>`,
+    css:
+`.row {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+  padding-top: 1.5rem;
+}
+.btn {
+  font-size: 1rem;
+  padding: 0.6em 1.2em;
+  border-radius: 0.4em;
+  border: 0;
+  background: #ff8a1e;
+  font-weight: 700;
+}
+.btn--sm { font-size: 0.8rem; }
+.btn--lg { font-size: 1.5rem; }`
+  },
+  vw: {
+    height: 340,
+    base: 'body{margin:0}',
+    html:
+`<header class="hero" data-m>
+  <h1 data-m>Creator IT Academy</h1>
+</header>
+<div class="half" data-m>50vw × 20vh</div>`,
+    css:
+`.hero {
+  height: 60vh;
+  display: grid;
+  place-items: center;
+  background: #0d0d0f;
+  color: #fff;
+}
+.hero h1 {
+  margin: 0;
+  font-size: 6vw;
+}
+.half {
+  width: 50vw;
+  height: 20vh;
+  background: #ffd23a;
+}`
+  },
+  traps: {
+    height: 260,
+    base: 'body{margin:0}',
+    html:
+`<h1 data-m>Заголовок з clamp()</h1>
+<div class="full" data-m>width: 100vw</div>
+<div class="tall"></div>`,
+    css:
+`h1 {
+  /* мін. 1.5rem · гнучко 5vw · макс. 3rem */
+  font-size: clamp(1.5rem, 5vw, 3rem);
+  margin: 0;
+  padding: 1rem;
+}
+.full {
+  width: 100vw;  /* спробуйте 100% */
+  padding: 0.75rem;
+  background: #ff8a1e;
+}
+.tall { height: 150vh; } /* сторінка зі скролом */`
+  },
+  practice: {
+    height: 440,
+    base: 'body{margin:0}',
+    html:
+`<header class="hero" data-m>
+  <h1 data-m>Вивчай фронтенд у Creator</h1>
+  <p>Від верстки до React</p>
+  <button class="btn" data-m>Записатись</button>
+</header>
+<article class="card" data-m>
+  <h2>Frontend Basic</h2>
+  <p>HTML, CSS, адаптивна верстка, основи JavaScript.</p>
+</article>`,
+    css:
+`/* Завдання:
+   1. .hero на всю висоту екрана (dvh)
+   2. h1 адаптивний через clamp()
+   3. шрифти й відступи в rem
+   4. padding кнопки в em
+   5. .card 90% ширини, але не ширше 40rem */
+
+.hero {
+  height: 400px;
+  padding: 24px;
+  background: #0d0d0f;
+  color: #fff;
+}
+.hero h1 { font-size: 40px; }
+.btn {
+  font-size: 18px;
+  padding: 12px 24px;
+  border: 0;
+  background: #ff8a1e;
+}
+.card {
+  width: 600px;
+  margin: 24px auto;
+  padding: 24px;
+  background: #f1f0ee;
+}`,
+    solution:
+`.hero {
+  min-height: 100dvh;
+  display: grid;
+  align-content: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: #0d0d0f;
+  color: #fff;
+}
+.hero h1 {
+  margin: 0;
+  font-size: clamp(1.75rem, 6vw, 3.5rem);
+}
+.hero p { margin: 0; font-size: 1.125rem; }
+.btn {
+  justify-self: start;
+  font-size: 1.125rem;
+  padding: 0.6em 1.4em;
+  border: 0;
+  border-radius: 0.4em;
+  background: #ff8a1e;
+  font-weight: 700;
+}
+.card {
+  width: 90%;
+  max-width: 40rem;
+  margin: 1.5rem auto;
+  padding: 1.5rem;
+  background: #f1f0ee;
+  border-radius: 0.75rem;
+}`
+  }
+};
+
+const BASE = 'body{margin:16px;font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#18181b;background:#fff}';
+const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+function buildPG(host) {
+  const key = host.dataset.pg, c = PG[key];
+  const state = { key, c, labels: true, doc: null, timer: 0, lastHtml: null };
+  const ctrls = (c.controls || []).map((k, i) =>
+    `<label class="ctl"><span>${k.label}</span><input type="range" id="${key}-c${i}" min="${k.min}" max="${k.max}" value="${k.value}"><output>${k.value}px</output></label>`).join('');
+  host.innerHTML = `
+    <div class="pg-editor">
+      <div class="pg-bar">
+        <button class="btn-s on" data-tab="css">CSS</button>
+        <button class="btn-s" data-tab="html">HTML</button>
+        <span class="spacer"></span>
+        ${c.solution ? '<button class="btn-s sol" data-act="solution">Рішення</button>' : ''}
+        <button class="btn-s" data-act="reset">Скинути</button>
+      </div>
+      <textarea id="${key}-css" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="CSS">${esc(c.css)}</textarea>
+      <textarea id="${key}-html" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="HTML" hidden>${esc(c.html)}</textarea>
+      ${ctrls}
+    </div>
+    <div class="pg-preview">
+      <div class="pg-bar">
+        <span class="dots"><i></i><i></i><i></i></span>
+        <span class="vp" title="Розмір вікна">— px</span>
+        <span class="spacer"></span>
+        <button class="btn-s" data-w="375">375</button>
+        <button class="btn-s" data-w="768">768</button>
+        <button class="btn-s" data-w="">100%</button>
+        <label class="lbl"><input type="checkbox" id="${key}-labels" checked>мітки</label>
+      </div>
+      <div class="stage"><div class="frame-wrap" style="height:${c.height || 320}px"><iframe title="Результат"></iframe></div></div>
+    </div>`;
+
+  const q = s => host.querySelector(s);
+  const taCss = q(`#${key}-css`), taHtml = q(`#${key}-html`);
+  const iframe = q('iframe'), wrap = q('.frame-wrap'), vp = q('.vp');
+  const ranges = [...host.querySelectorAll('input[type=range]')];
+
+  const apply = () => {
+    const d = state.doc; if (!d) return;
+    const ctlCss = (c.controls || []).map((k, i) => k.css(ranges[i].value)).join('');
+    d.getElementById('__base').textContent = BASE + (c.base || '') + ctlCss;
+    d.getElementById('__user').textContent = taCss.value;
+    if (taHtml.value !== state.lastHtml) { d.getElementById('__root').innerHTML = taHtml.value; state.lastHtml = taHtml.value; }
+    requestAnimationFrame(() => measure(state, iframe, vp));
+  };
+  const schedule = () => { clearTimeout(state.timer); state.timer = setTimeout(apply, 120); };
+
+  iframe.addEventListener('load', () => {
+    state.doc = iframe.contentDocument;
+    state.doc.defaultView.addEventListener('scroll', () => measure(state, iframe, vp));
+    apply();
+  });
+  iframe.srcdoc = '<!doctype html><html><head><meta charset="utf-8"><style id="__base"></style><style id="__user"></style><style>#__m{position:fixed;inset:0;pointer-events:none;z-index:2147483647}#__m span{position:absolute;font:600 11px/1 ui-monospace,Consolas,monospace;background:rgba(13,13,15,.88);color:#ffd23a;padding:3px 5px;border-radius:4px;white-space:nowrap}</style></head><body><div id="__root"></div><div id="__m"></div></body></html>';
+
+  [taCss, taHtml].forEach(t => {
+    t.addEventListener('input', schedule);
+    t.addEventListener('keydown', e => {
+      if (e.key === 'Tab' && !e.shiftKey) {
+        e.preventDefault();
+        const s = t.selectionStart, en = t.selectionEnd;
+        t.setRangeText('  ', s, en, 'end'); schedule();
+      } else if (e.key === 'Escape') t.blur();
+    });
+  });
+  ranges.forEach(r => r.addEventListener('input', () => { r.nextElementSibling.textContent = r.value + 'px'; apply(); }));
+
+  host.querySelectorAll('[data-tab]').forEach(b => b.addEventListener('click', () => {
+    host.querySelectorAll('[data-tab]').forEach(x => x.classList.toggle('on', x === b));
+    taCss.hidden = b.dataset.tab !== 'css'; taHtml.hidden = b.dataset.tab !== 'html';
+  }));
+  host.querySelector('[data-act=reset]').addEventListener('click', () => {
+    taCss.value = c.css; taHtml.value = c.html;
+    ranges.forEach((r, i) => { r.value = c.controls[i].value; r.nextElementSibling.textContent = r.value + 'px'; });
+    apply();
+  });
+  const sol = host.querySelector('[data-act=solution]');
+  if (sol) sol.addEventListener('click', () => { taCss.value = c.solution; apply(); });
+
+  host.querySelectorAll('[data-w]').forEach(b => b.addEventListener('click', () => {
+    wrap.style.width = b.dataset.w ? b.dataset.w + 'px' : '100%';
+  }));
+  q(`#${key}-labels`).addEventListener('change', e => { state.labels = e.target.checked; measure(state, iframe, vp); });
+
+  new ResizeObserver(() => measure(state, iframe, vp)).observe(wrap);
+}
+
+function measure(state, iframe, vp) {
+  const d = state.doc; if (!d) return;
+  vp.textContent = `вікно ${iframe.clientWidth}×${iframe.clientHeight}`;
+  const layer = d.getElementById('__m'); if (!layer) return;
+  layer.textContent = '';
+  if (!state.labels) return;
+  const win = d.defaultView;
+  d.querySelectorAll('#__root [data-m]').forEach(n => {
+    const r = n.getBoundingClientRect();
+    if (!r.width && !r.height) return;
+    const fs = +parseFloat(win.getComputedStyle(n).fontSize).toFixed(1);
+    const t = d.createElement('span');
+    t.textContent = `${Math.round(r.width)}×${Math.round(r.height)} · ${fs}px`;
+    layer.appendChild(t);
+    const w = t.offsetWidth;
+    if (r.height < 44) {
+      t.style.top = Math.max(0, r.top - 19) + 'px';
+      t.style.left = Math.max(0, r.left) + 'px';
+    } else {
+      t.style.top = (r.top + 3) + 'px';
+      t.style.left = Math.max(0, r.right - w - 3) + 'px';
+    }
+  });
+}
+
+document.querySelectorAll('[data-pg]').forEach(buildPG);
+document.getElementById('dprOut').textContent = 'devicePixelRatio = ' + (window.devicePixelRatio || 1);
+
+/* navigation */
+const slides = [...document.querySelectorAll('.slide')];
+const deck = document.getElementById('deck');
+let cur = 0;
+function show(i) {
+  cur = Math.max(0, Math.min(slides.length - 1, i));
+  slides.forEach((s, k) => s.hidden = k !== cur);
+  deck.scrollTop = 0;
+  document.getElementById('count').textContent = `${cur + 1} / ${slides.length}`;
+  document.getElementById('ttl').textContent = slides[cur].dataset.title;
+  document.getElementById('progress').style.width = ((cur + 1) / slides.length * 100) + '%';
+  document.getElementById('prev').disabled = cur === 0;
+  document.getElementById('next').disabled = cur === slides.length - 1;
+  try { history.replaceState(null, '', '#s' + (cur + 1)); } catch (e) {}
+}
+document.getElementById('prev').onclick = () => show(cur - 1);
+document.getElementById('next').onclick = () => show(cur + 1);
+document.getElementById('fs').onclick = () => {
+  const el = document.documentElement;
+  try {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else if (el.requestFullscreen) el.requestFullscreen().catch(() => {});
+  } catch (e) {}
+};
+document.addEventListener('keydown', e => {
+  const tag = (e.target.tagName || '').toLowerCase();
+  if (tag === 'textarea' || tag === 'input') return;
+  if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); show(cur + 1); }
+  else if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); show(cur - 1); }
+  else if (e.key === 'Home') show(0);
+  else if (e.key === 'End') show(slides.length - 1);
+  else if (e.key === 'f' || e.key === 'F') document.getElementById('fs').click();
+});
+const m = /^#s(\d+)$/.exec(location.hash);
+show(m ? +m[1] - 1 : 0);
+</script>
+
+</body></html>
